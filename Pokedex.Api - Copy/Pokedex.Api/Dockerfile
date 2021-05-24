@@ -6,7 +6,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Pokedex.Api/Pokedex.Api.csproj", "Pokedex.Api/"]
+COPY ["Pokedex.Api.csproj", "Pokedex.Api/"]
+COPY ["../Pokedex.Services/Pokedex.Services.csproj", "../Pokedex.Services/"]
+COPY ["../Pokedex.Models/Pokedex.Models.csproj", "../Pokedex.Models/"]
+
 RUN dotnet restore "Pokedex.Api/Pokedex.Api.csproj"
 COPY . .
 WORKDIR "/src/Pokedex.Api"

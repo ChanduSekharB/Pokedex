@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Pokedex.Services;
+using Pokedex.Services.Interfaces;
 
 namespace Pokedex.Api
 {
@@ -24,14 +26,22 @@ namespace Pokedex.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddControllers();
             services.AddSwaggerGen();
+            services.AddHttpClient();
+            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddScoped<IPokemonService, PokemonService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var configuration = new ConfigurationBuilder()
+  .AddJsonFile("appsettings.json")
+  .AddJsonFile($"appsettings.{env.EnvironmentName}.json")
+  .AddEnvironmentVariables()
+  .Build();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
